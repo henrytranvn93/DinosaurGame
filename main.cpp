@@ -24,13 +24,14 @@ class MainCharacter {
         int coordinate_y;
         int circle_radius;
         Color color; 
-        MainCharacter(int x, int y, int radius, Color color) {
+        MainCharacter(int x, int y, int radius, Color main_color) {
             coordinate_x = x;
             coordinate_y = y;
             circle_radius = radius;
+            color = main_color;
         }
         void renderMain() {
-            return DrawCircle(coordinate_x, coordinate_y, circle_radius, BLUE);
+            return DrawCircle(coordinate_x, coordinate_y, circle_radius, color);
         }
 
 };
@@ -40,15 +41,11 @@ int main () {
     int width {800};
     int height {450};
 
-    GameWindow axe_window(width, height, "Dinosaur Game");
-    axe_window.Initialize();
+    GameWindow game_window(width, height, "Dinosaur Game");
+    game_window.Initialize();
 
     // Initialize main character
-    int circle_x {width/2};
-    int circle_y {height/2};
-    int circle_radius {25};
-
-    MainCharacter circle(circle_x, circle_y, circle_radius, BLUE);
+    MainCharacter circle(width/2, height/2, 25, BLUE);
 
     // axe coordinates
     int axe_x {400};
@@ -65,7 +62,7 @@ int main () {
 
         // Game logic starts
 
-        DrawCircle(circle_x, circle_y, circle_radius, BLUE);
+        circle.renderMain();
         DrawRectangle(axe_x, axe_y, axe_length, axe_length, RED);
 
         // move the axe;
@@ -74,24 +71,26 @@ int main () {
             direction = -direction;
         }
 
-        if ((IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && circle_x < width) {
-            circle_x = circle_x + 10;
+        // move main character
+        if ((IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && circle.coordinate_x < width) {
+            circle.coordinate_x += 10;
         }
 
-        if ((IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && circle_x > 0) {
-            circle_x -= 10;
+        if ((IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && circle.coordinate_x > 0) {
+            circle.coordinate_x -= 10;
         }
 
-        if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && circle_y > 0) {
-            circle_y -= 10;
+        if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && circle.coordinate_y > 0) {
+            circle.coordinate_y -= 10;
         }
 
-        if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && circle_y < height) {
-            circle_y += 10;
+        if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && circle.coordinate_y < height) {
+            circle.coordinate_y += 10;
         }
 
 
         // Game logic ends
         EndDrawing();
     }
+    return 0;
 }
