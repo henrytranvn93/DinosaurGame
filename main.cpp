@@ -57,49 +57,89 @@ int main () {
     int width {800};
     int height {450};
 
+
     GameWindow game_window(width, height, "Dinosaur Game");
     game_window.Initialize();
 
     // Initialize main character
-    MainCharacter circle(width/2, height/2, 25, BLUE);
+    int radius {25};
+    MainCharacter circle(width/2, height/2, radius, BLUE);
 
     // Initialize challenge (axe)
-    Challenger axe(400, 0, 50, RED);
+    int challenge_length {50};
+    Challenger axe(500, 0, challenge_length, RED);
 
     // direction
     int direction {10};
+
+    //Determind edges
+    int l_main_x{circle.coordinate_x - circle.circle_radius};
+    int r_main_x{circle.coordinate_x + circle.circle_radius};
+    int u_main_x{circle.coordinate_y - circle.circle_radius};
+    int b_main_x{circle.coordinate_y + circle.circle_radius};
+
+    int l_axe_x{axe.coordinate_x};
+    int r_axe_x{axe.coordinate_x + axe.length};
+    int u_axe_x{axe.coordinate_y};
+    int b_axe_x{axe.coordinate_y + axe.length};
+
+
+    bool collision = b_axe_x >= u_main_x && 
+                    u_axe_x <= b_main_x && 
+                    r_axe_x >= l_main_x && 
+                    l_axe_x <= r_main_x; 
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
 
-        // Game logic starts
+        if (collision) {
+            DrawText("Game Over", width/2 - 60, height/2 - 10, 30, RED);
+        } else {
 
-        circle.renderMain();
-        axe.renderChallenge();
+            // Game logic starts
+            l_main_x = circle.coordinate_x - circle.circle_radius;
+            r_main_x = circle.coordinate_x + circle.circle_radius;
+            u_main_x = circle.coordinate_y - circle.circle_radius;
+            b_main_x = circle.coordinate_y + circle.circle_radius;
 
-        // move the axe/challenger;
-        axe.coordinate_y += direction;
-        if (axe.coordinate_y > height || axe.coordinate_y < 0) {
-            direction = -direction;
-        }
+            l_axe_x = axe.coordinate_x;
+            r_axe_x = axe.coordinate_x + axe.length;
+            u_axe_x = axe.coordinate_y;
+            b_axe_x = axe.coordinate_y + axe.length;
 
-        // move main character
-        if ((IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && circle.coordinate_x < width) {
-            circle.coordinate_x += 10;
-        }
+            collision = b_axe_x >= u_main_x && 
+                    u_axe_x <= b_main_x && 
+                    r_axe_x >= l_main_x && 
+                    l_axe_x <= r_main_x; 
 
-        if ((IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && circle.coordinate_x > 0) {
-            circle.coordinate_x -= 10;
-        }
 
-        if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && circle.coordinate_y > 0) {
-            circle.coordinate_y -= 10;
-        }
+            circle.renderMain();
+            axe.renderChallenge();
 
-        if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && circle.coordinate_y < height) {
-            circle.coordinate_y += 10;
+            // move the axe/challenger;
+            axe.coordinate_y += direction;
+            if (axe.coordinate_y + axe.length > height || axe.coordinate_y < 0) {
+                direction = -direction;
+            }
+
+            // move main character
+            if ((IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && r_main_x < width) {
+                circle.coordinate_x += 10;
+            }
+
+            if ((IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && l_main_x > 0) {
+                circle.coordinate_x -= 10;
+            }
+
+            if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && u_main_x > 0) {
+                circle.coordinate_y -= 10;
+            }
+
+            if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && b_main_x < height) {
+                circle.coordinate_y += 10;
+            }
         }
 
 
