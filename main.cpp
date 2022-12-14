@@ -13,7 +13,7 @@ class GameWindow {
             title = window_title;
         }
         void Initialize() {
-            return InitWindow(this->width, this->height, this->title.c_str());
+            return InitWindow(width, height, title.c_str());
         }
 };
 
@@ -32,8 +32,24 @@ class MainCharacter {
         }
         void renderMain() {
             return DrawCircle(coordinate_x, coordinate_y, circle_radius, color);
-        }
+        }   
+};
 
+class Challenger {
+    public:
+        int coordinate_x;
+        int coordinate_y;
+        int length;
+        Color color;
+        Challenger(int x, int y, int len, Color challenge_color) {
+            coordinate_x = x;
+            coordinate_y = y;
+            length = len;
+            color = challenge_color;
+        }
+        void renderChallenge() {
+            return DrawRectangle(coordinate_x, coordinate_y, length, length, color);
+        }
 };
 
 int main () {
@@ -47,10 +63,8 @@ int main () {
     // Initialize main character
     MainCharacter circle(width/2, height/2, 25, BLUE);
 
-    // axe coordinates
-    int axe_x {400};
-    int axe_y {0};
-    int axe_length {50};
+    // Initialize challenge (axe)
+    Challenger axe(400, 0, 50, RED);
 
     // direction
     int direction {10};
@@ -63,11 +77,11 @@ int main () {
         // Game logic starts
 
         circle.renderMain();
-        DrawRectangle(axe_x, axe_y, axe_length, axe_length, RED);
+        axe.renderChallenge();
 
-        // move the axe;
-        axe_y += direction;
-        if (axe_y > height || axe_y < 0) {
+        // move the axe/challenger;
+        axe.coordinate_y += direction;
+        if (axe.coordinate_y > height || axe.coordinate_y < 0) {
             direction = -direction;
         }
 
