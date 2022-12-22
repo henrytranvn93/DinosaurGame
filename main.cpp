@@ -13,8 +13,14 @@ class GameWindow {
             title = window_title;
         }
         void Initialize() {
-            return InitWindow(width, height, title.c_str());
+            InitWindow(width, height, title.c_str());
+            InitAudioDevice();
+        };
+        void CloseGame() {
+            CloseAudioDevice();
+            CloseWindow();
         }
+
 };
 
 
@@ -146,5 +152,8 @@ int main () {
         // Game logic ends
         EndDrawing();
     }
+
+    game_window.CloseGame();
+    
     return 0;
 }
